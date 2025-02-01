@@ -100,10 +100,13 @@ def ejecutar_script():
             recuperar.clean_up(final_output_folder)
             update_message("Limpieza completada...")
 
-            ventana.after(0, mostrar_resultado, f"Proceso completado con éxito en: {final_output_folder}")
+            messagebox.showinfo("Éxito", f"Proceso completado con éxito en: \n{final_output_folder}")
+
+            update_message("Aquí aparecerán los resultado")
         except Exception as e:
             ventana.after(0, mostrar_error, f"Error: {e}")
         finally:
+            update_progress(0) #Reinicia la barra de progreso a su estado inicial al terminar el proceso
             ventana.after(0, habilitar_boton)
 
     thread = threading.Thread(target=hilo_recuperar)
@@ -273,4 +276,3 @@ btn_salir = tk.Button(
 btn_salir.pack(side=tk.LEFT, padx=10)
 
 ventana.mainloop()
-

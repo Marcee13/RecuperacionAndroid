@@ -5,10 +5,6 @@ import sqlite3
 import shutil
 
 def obtener_numero_serie():
-    """
-    Obtiene el número de serie del dispositivo Android conectado.
-    Retorna el número de serie si está conectado, o None si no hay dispositivos.
-    """
     try:
         devices_output = subprocess.check_output(['adb', 'devices']).decode('utf-8').strip().splitlines()
         
@@ -34,11 +30,10 @@ def sanitize_name(name):
     return name
 
 def delete_db_journal_files_on_device(update_callback=None):
-    """Elimina los archivos DB-JOURNAL en el dispositivo conectado."""
     if update_callback:
         update_callback(10)
     delete_cmd = "find /storage/emulated/0/Android/data/org.odk.collect.android/files/projects -name '*.db-journal' -exec rm -f {} +"
-    subprocess.run(["adb", "shell", delete_cmd], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
+    subprocess.run(["adb", "shell", delete_cmd], check=True, creationflags=subprocess.CREATE_NO_WINDOW) #Se crea una flag para evitar la aparicion de ventanas CMD
     if update_callback:
         update_callback(20)
 
@@ -51,7 +46,7 @@ def compress_projects_and_pull(local_destination_folder, update_callback=None):
     compress_cmd = f"toybox tar -czf {remote_tar_path} -C /storage/emulated/0/Android/data/org.odk.collect.android/files projects"
     subprocess.run(["adb", "shell", compress_cmd], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
 
-    subprocess.run(["adb", "pull", remote_tar_path, local_destination_folder], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
+    subprocess.run(["adb", "pull", remote_tar_path, local_destination_folder], check=True, creationflags=subprocess.CREATE_NO_WINDOW) #Se crea una flag para evitar la aparicion de ventanas CMD
 
     if update_callback:
         update_callback(40)
