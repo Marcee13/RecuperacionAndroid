@@ -130,10 +130,10 @@ else:
     application_path = os.path.dirname(os.path.abspath(__file__))
 
 # Ruta completa a las imágenes
-logo_path = os.path.join(application_path, 'logo.png')
-cerrar_path = os.path.join(application_path, 'cerrar.png')
-respaldo_path = os.path.join(application_path, 'respaldo.png')
-carpeta_path = os.path.join(application_path, 'carpeta.png')
+logo_path = os.path.join(application_path, 'imagenes/logo.png')
+cerrar_path = os.path.join(application_path, 'imagenes/cerrar.png')
+respaldo_path = os.path.join(application_path, 'imagenes/respaldo.png')
+carpeta_path = os.path.join(application_path, 'imagenes/carpeta.png')
 
 # Ventana principal de la aplicación se define el tamaño y otras caracteristicas.
 ventana = tk.Tk()
