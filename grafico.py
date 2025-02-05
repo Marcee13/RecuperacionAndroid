@@ -124,6 +124,9 @@ def habilitar_boton():
 def cerrar_ventana():
     ventana.destroy()
 
+def mostrar_ayuda():
+    messagebox.showinfo("Ayuda", "\t\t***Como usar el programa***\n\nEn el campo 'Nombre de la carpeta' debes ingresar el codigo del Especialista de la Brigada.\n\nPuedes cambiar la ubicacion donde se guardara la informacion con el botón 'Cambiar ruta'\n\n'Iniciar el proceso' realizara le proceso de extraccion de la informacion del dispositivo.\n\nEl botón 'Salir' cierra el programa. \n\nCuando inicies una brigada no cambies el campo 'Nombre de la carpeta' esto permitira que todos los Tecnicos se guarden dentro del mismo Especialista con sus respectivos segmentos")
+
 # Detectar si estamos en un archivo .exe
 if getattr(sys, 'frozen', False):
     # Si estamos en un .exe, obtener la ruta de los archivos extraídos
@@ -137,6 +140,7 @@ logo_path = os.path.join(application_path, 'imagenes/logo.png')
 cerrar_path = os.path.join(application_path, 'imagenes/cerrar.png')
 respaldo_path = os.path.join(application_path, 'imagenes/respaldo.png')
 carpeta_path = os.path.join(application_path, 'imagenes/carpeta.png')
+info_path=os.path.join(application_path, 'imagenes/informacion.png')
 
 # Ventana principal de la aplicación se define el tamaño y otras caracteristicas.
 ventana = tk.Tk()
@@ -172,6 +176,13 @@ try:
     iconCarpeta = ImageTk.PhotoImage(image_carpeta)
 except Exception as e:
     print(f"Error al cargar la imagen 'carpeta.png': {e}")
+
+try:
+    image_info = Image.open(info_path)
+    image_info = image_info.resize((18, 18))
+    iconInfo = ImageTk.PhotoImage(image_info)
+except Exception as e:
+    print(f"Error al cargar la imagen 'informacion.png': {e}")
 
 # Etiqueta para mostrar el número de serie del dispositivo
 label_info_dispositivo = tk.Label(
@@ -274,5 +285,13 @@ btn_salir = tk.Button(
     width="70"
 )
 btn_salir.pack(side=tk.LEFT, padx=10)
+
+btn_ayuda=tk.Button(
+    ventana,
+    #text="Ayuda",
+    image=iconInfo,
+    command=mostrar_ayuda
+)
+btn_ayuda.pack(side=tk.RIGHT,pady=20)
 
 ventana.mainloop()
