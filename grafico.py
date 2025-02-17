@@ -127,6 +127,14 @@ def cerrar_ventana():
 def mostrar_ayuda():
     messagebox.showinfo("Ayuda", "\t\t***Como usar el programa***\n\nEn el campo 'Nombre de la carpeta' debes ingresar el codigo del Especialista de la Brigada.\n\nPuedes cambiar la ubicacion donde se guardara la informacion con el botón 'Cambiar ruta'\n\n'Iniciar el proceso' realizara le proceso de extraccion de la informacion del dispositivo.\n\nEl botón 'Salir' cierra el programa. \n\nCuando inicies una brigada no cambies el campo 'Nombre de la carpeta' esto permitira que todos los Tecnicos se guarden dentro del mismo Especialista con sus respectivos segmentos")
 
+def mostrar_tooltip(event):
+    tooltip=tk.Toplevel(ventana)
+    tooltip.wm_overrideredirect(True)
+    tooltip.geometry(f"+{event.x_root + 10}+{event.y_root + 25}")
+    etiqueta=tk.Label(tooltip, text="Ayuda", bg="#DDDDDD", padx=5, pady=2)
+    etiqueta.pack()
+    tooltip.after(800,tooltip.destroy)
+
 # Detectar si estamos en un archivo .exe
 if getattr(sys, 'frozen', False):
     # Si estamos en un .exe, obtener la ruta de los archivos extraídos
@@ -288,10 +296,10 @@ btn_salir.pack(side=tk.LEFT, padx=10)
 
 btn_ayuda=tk.Button(
     ventana,
-    #text="Ayuda",
     image=iconInfo,
     command=mostrar_ayuda
 )
-btn_ayuda.pack(side=tk.RIGHT,pady=20)
+btn_ayuda.pack(side=tk.RIGHT,padx=20)
+btn_ayuda.bind("<Enter>",mostrar_tooltip)
 
 ventana.mainloop()
