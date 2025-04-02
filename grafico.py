@@ -63,6 +63,29 @@ def cambiar_ruta():
     if carpeta:
         label_ruta.config(text=f"Ruta de destino: {carpeta}")
 
+# Función para habilitar el archivo Excel
+def abrir_excel():
+    try:        
+        # Obtén la ruta base desde label_ruta (si ya la tienes configurada)
+        ruta_destino = label_ruta.cget("text").replace("Ruta de destino: ", "").strip()
+
+        # Asegúrate de que la ruta predeterminada exista, si no, crea la carpeta
+        if not os.path.exists(DEFAULT_PATH):
+            os.makedirs(DEFAULT_PATH)
+
+        # Construye la ruta completa para el archivo Excel en la carpeta predeterminada
+        ruta_completa = os.path.join(DEFAULT_PATH, "registro_backup.xlsx")  # Guardar en la carpeta predeterminada
+        excel_file = os.path.normpath(ruta_completa)  # Normaliza la ruta
+        
+        # Verifica si el archivo existe
+        if os.path.exists(excel_file):
+            os.startfile(excel_file)  # Abre el archivo con la aplicación predeterminada
+        else:
+            # Muestra un mensaje si el archivo no se encuentra
+            messagebox.showwarning("Archivo no encontrado", f"No se ha generado el archivo de registro.\nRuta buscada:\n{excel_file}")
+    except Exception as e:
+        messagebox.showerror("Error inesperado", f"Ha ocurrido un error: {str(e)}")
+        
 # Función que ejecuta el proceso en segundo plano usando hilos
 def ejecutar_script():
     folder_name = folder_entry.get()
@@ -293,6 +316,14 @@ btn_salir = tk.Button(
     width="70"
 )
 btn_salir.pack(side=tk.LEFT, padx=10)
+
+btn_abrir_excel = tk.Button(
+    frame_botones,
+    text="Abrir Registro de Actividades",
+    command=abrir_excel
+)
+btn_abrir_excel.pack(side=tk.LEFT, padx=10)
+
 
 btn_ayuda=tk.Button(
     ventana,
