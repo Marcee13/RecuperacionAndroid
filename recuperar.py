@@ -85,58 +85,53 @@ def create_folders_with_project_archive(extracted_folder, output_folder, update_
     if not os.path.isdir(projects_root):
         print(f"No existe la carpeta: {projects_root}")
         return
-
+ 
     subfolders = [f for f in os.listdir(projects_root) if os.path.isdir(os.path.join(projects_root, f))]
     total_subfolders = len(subfolders)
-    
-    # Recorremos cada subcarpeta
     for i, folder_name in enumerate(subfolders):
         subfolder_path = os.path.join(projects_root, folder_name)
         if not os.path.isdir(subfolder_path):
             continue
-
+ 
         metadata_dir = os.path.join(subfolder_path, "metadata")
         if not os.path.isdir(metadata_dir):
             continue
-        
-        for file_name in os.listdir(metadata_dir):
-            if file_name.lower().endswith(".db"):
-                db_path = os.path.join(metadata_dir, file_name)
-                try:
-                    conn = sqlite3.connect(db_path)
-                    cursor = conn.cursor()
-                    cursor.execute("SELECT DISTINCT codConsultor, idSegmento FROM user_logs;")
-                    rows = cursor.fetchall()
-
-                    os.makedirs(output_folder, exist_ok=True)
-                    for row in rows:
-                        cod_consultor, id_segmento = row
-                        if not id_segmento:
-                            continue
-
-                        segmento_folder = os.path.join(output_folder, str(id_segmento))
-                        os.makedirs(segmento_folder, exist_ok=True)
-                        
-                        consultor_folder = os.path.join(segmento_folder, cod_consultor)
-                        os.makedirs(consultor_folder, exist_ok=True)
-                        
-                        tar_gz_path = os.path.join(consultor_folder, "projects.tar.gz")
-                        with tarfile.open(tar_gz_path, "w:gz") as tar:
-                            tar.add(extracted_folder, arcname="projects")
-
-                        #Se capturan los datos para generar el Excel
-                        reporte_excel.registrar_actividad_en_excel(output_folder, cod_consultor, id_segmento)
-
-                    conn.close()
-                except sqlite3.Error as e:
-                    print(f"Error al leer la base de datos '{db_path}': {e}")
-                finally:
-                    conn.close()
-
-        # Actualiza el progreso
+ 
+        db_file = os.path.join(metadata_dir, "user_logs.db")
+        if os.path.isfile(db_file):
+            try:
+                conn = sqlite3.connect(db_file)
+                cursor = conn.cursor()
+                cursor.execute("SELECT DISTINCT codConsultor, idSegmento FROM user_logs;")
+                rows = cursor.fetchall()
+ 
+                os.makedirs(output_folder, exist_ok=True)
+                for row in rows:
+                    cod_consultor, id_segmento = row
+                    if not id_segmento:
+                        continue
+ 
+                    segmento_folder = os.path.join(output_folder, str(id_segmento))
+                    os.makedirs(segmento_folder, exist_ok=True)
+ 
+                    consultor_folder = os.path.join(segmento_folder, cod_consultor)
+                    os.makedirs(consultor_folder, exist_ok=True)
+ 
+                    tar_gz_path = os.path.join(consultor_folder, "projects.tar.gz")
+                    with tarfile.open(tar_gz_path, "w:gz") as tar:
+                        tar.add(extracted_folder, arcname="projects")
+ 
+                    reporte_excel.registrar_actividad_en_excel(output_folder, cod_consultor, id_segmento)
+ 
+                conn.close()
+            except sqlite3.Error as e:
+                print(f"Error al leer la base de datos '{db_file}': {e}")
+            finally:
+                conn.close()
+ 
         if update_callback:
             progress = int(((i + 1) / total_subfolders) * 100)
-            update_callback(progress)        
+            update_callback(progress)       
 
 def clean_up(local_destination_folder):
     """Elimina los archivos temporales generados durante el proceso."""
