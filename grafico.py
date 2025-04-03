@@ -65,16 +65,11 @@ def cambiar_ruta():
 
 # Función para habilitar el archivo Excel
 def abrir_excel():
-    try:        
-        # Obtén la ruta base desde label_ruta (si ya la tienes configurada)
+    try:
         ruta_destino = label_ruta.cget("text").replace("Ruta de destino: ", "").strip()
 
-        # Asegúrate de que la ruta predeterminada exista, si no, crea la carpeta
-        if not os.path.exists(DEFAULT_PATH):
-            os.makedirs(DEFAULT_PATH)
-
         # Construye la ruta completa para el archivo Excel en la carpeta predeterminada
-        ruta_completa = os.path.join(DEFAULT_PATH, "registro_backup.xlsx")  # Guardar en la carpeta predeterminada
+        ruta_completa = os.path.join(final_output_folder, "registro_backup.xlsx")  # Guardar en la carpeta predeterminada
         excel_file = os.path.normpath(ruta_completa)  # Normaliza la ruta
         
         # Verifica si el archivo existe
@@ -109,6 +104,8 @@ def ejecutar_script():
 
     def hilo_recuperar():
         try:
+            #Se define como global la ruta completa del respaldo, incluye la ruta y el nombre de carpeta dado por el usuario
+            global final_output_folder
             final_output_folder = os.path.join(ruta_destino, folder_name)
 
             recuperar.compress_projects_and_pull(final_output_folder, update_callback=update_progress)
@@ -172,6 +169,7 @@ cerrar_path = os.path.join(application_path, 'imagenes/cerrar.png')
 respaldo_path = os.path.join(application_path, 'imagenes/respaldo.png')
 carpeta_path = os.path.join(application_path, 'imagenes/carpeta.png')
 info_path=os.path.join(application_path, 'imagenes/informacion.png')
+excel_path=os.path.join(application_path, 'imagenes/excel.png')
 
 # Ventana principal de la aplicación se define el tamaño y otras caracteristicas.
 ventana = tk.Tk()
@@ -214,6 +212,13 @@ try:
     iconInfo = ImageTk.PhotoImage(image_info)
 except Exception as e:
     print(f"Error al cargar la imagen 'informacion.png': {e}")
+
+try:
+    image_excel = Image.open(excel_path)
+    image_excel = image_excel.resize((18, 18))
+    iconExcel = ImageTk.PhotoImage(image_excel)
+except Exception as e:
+    print(f"Error al cargar la imagen 'excel.png': {e}")
 
 # Etiqueta para mostrar el número de serie del dispositivo
 label_info_dispositivo = tk.Label(
@@ -320,6 +325,10 @@ btn_salir.pack(side=tk.LEFT, padx=10)
 btn_abrir_excel = tk.Button(
     frame_botones,
     text="Abrir Registro de Actividades",
+    image=iconExcel,
+    compound="left",
+    anchor="w",
+    padx=10,
     command=abrir_excel
 )
 btn_abrir_excel.pack(side=tk.LEFT, padx=10)
