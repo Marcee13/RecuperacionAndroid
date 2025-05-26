@@ -40,6 +40,7 @@ def registrar_actividad_en_excel(output_folder, cod_consultor, id_segmento):
         text_format = workbook.add_format({"text_wrap": True})  # Ajuste de texto
 
         # Ajustar la columna "CodConsultor" con saltos de línea y ancho adecuado
-        worksheet.set_column("B:B", 30, text_format)
-
-
+        worksheet.set_column("A:A", 20)
+        worksheet.set_column("B:B", 25, text_format)
+        worksheet.set_column("C:C", 20)
+        worksheet.set_column("D:D", 40, text_format)
