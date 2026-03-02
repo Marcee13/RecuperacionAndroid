@@ -1,0 +1,36 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+env/
+venv/
+build/
+dist/
+*.spec
+
+# --- Bases de Datos (SQLite) ---
+# Ignora las bases de datos locales generadas por el sistema
+*.db
+*.db-journal
+
+# --- Archivos de Salida y Backups ---
+# Ignora la carpeta donde se descargan los backups para no llenar el repo
+Download/
+BackUp_CensoAgropecuario/
+projects_extracted/
+*.tar.gz
+*.7z
+
+# --- Reportes y Excel ---
+# Ignora los archivos de registro de actividades generados
+*.xlsx
+~$*.xlsx
+
+# --- IDEs y Sistema ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
